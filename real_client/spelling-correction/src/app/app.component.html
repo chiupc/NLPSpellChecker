@@ -1,0 +1,28 @@
+<div class="container">
+  <h2>Real Time Spelling Correction App</h2>
+  <p class="main">
+    Check your English text for grammar, spelling, and punctuation errors
+    with our spelling correction app.
+  </p>
+
+  <div class="content-wrapper">
+    <div>
+      <textarea
+        id="textarea"
+        class="textarea"
+        placeholder="Type Something..."
+        maxlength="500"
+      ></textarea>
+
+      <button onclick="copyText()">Copy Text</button>
+
+      <div class="counter-container">
+        <p>Total character: <span id="total-conter"> 0</span></p>
+        <p>
+          Remaining:
+          <span class="remaining-counter" id="remaining-counter">500</span>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
