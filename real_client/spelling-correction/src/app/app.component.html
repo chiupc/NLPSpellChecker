@@ -7,14 +7,47 @@
 
   <div class="content-wrapper">
     <div>
-      <textarea
-        id="textarea"
-        class="textarea"
-        placeholder="Type Something..."
-        maxlength="500"
-      ></textarea>
+      <div class="box-container">
+        <textarea
+          id="textarea"
+          class="textarea"
+          placeholder="Type Something..."
+          maxlength="500"
+        ></textarea>
+        <div class="corpus-list">
+          <ul class="scroll" id="corpus-ul">
+            <li>apple</li>
+            <li>anchor</li>
+            <li>ashes</li>
+            <li>bay</li>
+            <li>buy</li>
+            <li>bamboo</li>
+            <li>best</li>
+            <li>bake</li>
+            <li>text</li>
+            <li>text</li>
+            <li>text</li>
+            <li>text</li>
+            <li>text</li>
+            <li>text</li>
+            <li>text</li>
+            <li>text</li>
+            <li>text</li>
+            <li>text</li>
+            <li>text</li>
+            <li>text</li>
+            <li>text</li>
+          </ul>
+          <form class="search-form" id="form" role="search" >
+            <input class='search-input' type="search" id="query" name="q"
+             placeholder="Search..."
+             aria-label="Search through site content" id="my-input">
+            <button class="search-button" id="search-but">Search</button>
+          </form>
+        </div>
+      </div>
 
-      <button onclick="copyText()">Copy Text</button>
+      <button class='check-button' onclick="copyText()">Spell Check</button>
 
       <div class="counter-container">
         <p>Total character: <span id="total-conter"> 0</span></p>
