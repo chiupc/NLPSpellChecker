@@ -80,14 +80,14 @@ textarea {
   background: rgb(17 166 131);
   color: rgb(255 255 255);
   border-radius: 6px;
-  padding: 16px 32px;
+  padding: 14px 30px;
   border: none;
-  font-size: 18px;
+  font-size: 17px;
   letter-spacing: 1px;
   margin: auto;
   display: flex;
   position: relative;
-  margin-top: -80px;
+  margin-top: -70px;
   cursor: pointer;
 }
 
@@ -106,6 +106,7 @@ button:hover {
 }
 
 .counter-container {
+  max-width: 600px;
   margin-top: 30px;
   display: flex;
   justify-content: space-between;
@@ -222,8 +223,11 @@ li:last-child{
   }
 
   textarea {
+    width: 75vw;
     font-size: 16px;
     word-spacing: normal;
+    padding: 15px;
+    margin: 10px;
   }
 
   button {
@@ -238,5 +242,19 @@ li:last-child{
 
   .counter-container p:first-child {
     margin-bottom: 0;
+  }
+  .box-container {
+    flex-direction: column;
+    gap: 100px;
+  }
+  .search-form{
+    max-width: 75vw;
+    margin-bottom: 50px;
+  }
+  .corpus-list {
+    width: 75vw;
+  }
+  .check-button {
+    margin-top: -140%;
   }
 }
