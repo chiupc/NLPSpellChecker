@@ -5,14 +5,18 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from spell_check_model.models import *
+import re
 
-corpus = brown.words()
-
+#corpus = brown.words()
+brown_words_non_punc = []
+for word in brown.words():
+    for w in re.findall(r"[a-z]+",word.lower()):
+        brown_words_non_punc.append(w)
 
 @api_view(['GET'])
 def get_corpus_tokens(request):
     print(request.method)
-    res = {"result" : list(corpus)}
+    res = {"result" : list(set(brown_words_non_punc))}
     return Response(data=res, status=status.HTTP_200_OK)
 
 
