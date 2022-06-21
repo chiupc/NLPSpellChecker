@@ -1,6 +1,5 @@
 import numpy
 
-
 def minDistance(targetString, sourceString):
     """
     Takes in Strings and return Minimum Distance Matrix and Minimum Distance
@@ -32,8 +31,8 @@ def minDistance(targetString, sourceString):
           diagDistance = distance[i][j] + 2 
           distance[i-1][j+1] = min(leftDistance,upDistance,diagDistance)
 
-    print(distance)
-    print(distance[0][sourceLength])
+    # print(distance)
+    # print(distance[0][sourceLength])
     return (distance,distance[0][sourceLength])
 
 def backTrace(distanceMatrix,targetString,sourceString):
