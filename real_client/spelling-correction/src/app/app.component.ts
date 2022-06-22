@@ -11,24 +11,7 @@ export class AppComponent{
   searchForm: any;
   title = 'spelling-correction';
 
-  corpus = [
-    {word: 'apple'},
-    {word: 'ace'},
-    {word: 'anchor'},
-    {word: 'ashes'},
-    {word: 'ball'},
-    {word: 'box'},
-    {word: 'better'},
-    {word: 'band'},
-    {word: 'cry'},
-    {word: 'catch'},
-    {word: 'capture'},
-    {word: 'cast'},
-    {word: 'donkey'},
-    {word: 'docker'},
-    {word: 'dash'},
-    {word: 'dump'}
-  ];
+  
 
   /*
   constructor(private formBuilder: FormBuilder){

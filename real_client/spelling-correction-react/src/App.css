@@ -1,0 +1,239 @@
+.container {
+  padding: 30px;
+  margin-top: 80px;
+}
+
+.container p.main {
+  margin: 30px auto;
+}
+
+.content-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+h2 {
+  color: rgb(43 45 56);
+  text-align: center;
+  font-size: 48px;
+  letter-spacing: -0.2px;
+  font-family: "Merriweather", serif;
+}
+
+p {
+  max-width: 670px;
+  text-align: center;
+  margin-top: 24px;
+  margin-bottom: 100px;
+}
+
+textarea {
+  width: 600px;
+  margin-right: 50px;
+  height: 316px;
+  padding: 18px;
+  position: relative;
+  resize: none;
+  box-shadow: 0 12px 48px 0px rgb(109 117 141 / 20%);
+  background: rgb(255 255 255);
+  border: 0.5px solid rgb(231 233 245);
+  border-radius: 16px;
+}
+
+textarea:focus {
+  border: 0.3px solid rgb(43, 45, 56, 0.3);
+  outline: none;
+}
+
+p,
+textarea {
+  font-size: 18px;
+  letter-spacing: 1px;
+  word-spacing: 2px;
+  line-height: 1.6;
+}
+
+.check-button {
+  background: rgb(17 166 131);
+  color: rgb(255 255 255);
+  border-radius: 6px;
+  padding: 14px 30px;
+  border: none;
+  font-size: 17px;
+  letter-spacing: 1px;
+  margin: auto;
+  display: flex;
+  position: relative;
+  margin-top: -70px;
+  cursor: pointer;
+}
+
+.search-form {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 13px;
+}
+
+button:focus,
+button:hover {
+  background: rgb(42, 201, 164);
+  box-shadow: 0 5px 30px 0 rgba(0, 0, 0, 0.1);
+}
+
+.counter-container {
+  max-width: 600px;
+  margin-top: 30px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.box-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.corpus-list{
+  box-shadow: 0 12px 48px 0px rgb(109 117 141 / 20%);
+  background: rgb(255 255 255);
+  border: 0.5px solid rgb(231 233 245);
+  height: 255px;
+  width:280px;
+  border-radius: 16px;
+}
+
+.search-input {
+  box-shadow: 0 12px 48px 0px rgb(109 117 141 / 20%);
+  background: rgb(255 255 255);
+  border: 0.5px solid rgb(231 233 245);
+  width: 180px;
+  height: 52px;
+  border-radius: 6px;
+  padding: 16px;
+  font-size: 15px;
+}
+
+.search-input:focus {
+  border: 0.3px solid rgb(43, 45, 56, 0.3);
+  outline: none;
+}
+
+.search-button {
+  background: rgb(17 166 131);
+  color: rgb(255 255 255);
+  border-radius: 6px;
+  padding: 16px 14px;
+  border: none;
+  font-size: 16px;
+  letter-spacing: 1px;
+  margin: auto;
+  display: flex;
+  position: relative;
+  cursor: pointer;
+}
+
+ul{
+  list-style:none;
+  max-height:250px;
+  margin:0;
+  overflow:auto;
+  padding:0;
+  text-indent:15px;
+}
+li{
+  line-height:35px;
+}
+li:nth-child(even){
+  //background:#ccc;
+  border-bottom: 1px solid #ccc;
+  border-top: 1px solid #ccc;
+}
+
+li:hover {
+  background-color: #ccc;
+}
+
+li:nth-child(1){
+  border-top-left-radius: 16px;
+  //border-top-right-radius: 16px;
+}
+
+li:last-child{
+  border-bottom-left-radius: 16px;
+  //border-bottom-right-radius: 16px;
+}
+
+.scroll::-webkit-scrollbar {
+  width: 13px;
+  padding-right: -5px;
+}
+
+.scroll::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.3); 
+  border-radius: 10px;
+  border: 3px solid #ccc;
+}
+
+.scroll::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background-color: rgb(59, 180, 151);
+  border: 1.8px solid #ccc;
+  -webkit-box-shadow: inset 0 0 2px rgba(0,0,0,0.5); 
+}
+
+@media screen and (max-width: 768px) {
+  .container {
+    margin-top: 20px;
+  }
+
+  h2 {
+    font-size: 28px;
+  }
+
+  p {
+    font-size: 16px;
+    word-spacing: normal;
+    margin-bottom: 40px;
+    margin-top: 15px;
+  }
+
+  textarea {
+    width: 75vw;
+    font-size: 16px;
+    word-spacing: normal;
+    padding: 15px;
+    margin: 10px;
+  }
+
+  button {
+    padding: 12px 28px;
+    font-size: 16px;
+    margin-top: -70px;
+  }
+
+  .counter-container {
+    flex-direction: column;
+  }
+
+  .counter-container p:first-child {
+    margin-bottom: 0;
+  }
+  .box-container {
+    flex-direction: column;
+    gap: 100px;
+  }
+  .search-form{
+    max-width: 75vw;
+    margin-bottom: 50px;
+  }
+  .corpus-list {
+    width: 75vw;
+  }
+  .check-button {
+    margin-top: -140%;
+  }
+}
