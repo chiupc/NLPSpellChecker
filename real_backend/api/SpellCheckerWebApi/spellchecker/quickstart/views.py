@@ -5,6 +5,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from spell_check_model.models import *
+from spell_check_model.spellCheck import *
 import re
 
 #corpus = brown.words()
@@ -23,4 +24,4 @@ def get_corpus_tokens(request):
 @api_view(['POST'])
 def spelling_check(request):
     input_text = request.data
-    return Response(data=non_word_spelling_check(request.data["input_text"]), status=status.HTTP_200_OK)
+    return Response(data=spellCheck(request.data["input_text"]), status=status.HTTP_200_OK)
