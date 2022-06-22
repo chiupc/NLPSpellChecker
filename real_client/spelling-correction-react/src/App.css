@@ -29,7 +29,8 @@ p {
   margin-bottom: 100px;
 }
 
-textarea {
+
+textarea, .DraftEditor-root {
   width: 600px;
   margin-right: 50px;
   height: 316px;
@@ -40,6 +41,19 @@ textarea {
   background: rgb(255 255 255);
   border: 0.5px solid rgb(231 233 245);
   border-radius: 16px;
+}
+
+.green {
+  /*color: rgb(17 166 131);*/
+  background-color: #d7f7f0;
+  border-radius: 3.5px;
+  padding: 5px 3px 3px;
+  border-bottom: 4px solid rgba(21,195,154,255);
+}
+
+.DraftEditor-root:focus {
+  border: 0.3px solid rgb(43, 45, 56, 0.3);
+  outline: none;
 }
 
 textarea:focus {
@@ -53,6 +67,13 @@ textarea {
   letter-spacing: 1px;
   word-spacing: 2px;
   line-height: 1.6;
+}
+
+.DraftEditor-root {
+  font-size: 18px;
+  letter-spacing: 0.8px;
+  word-spacing: 2px;
+  line-height: 2.2;
 }
 
 .check-button {

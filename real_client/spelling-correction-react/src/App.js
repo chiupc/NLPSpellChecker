@@ -1,24 +1,58 @@
 import './App.css';
 import Axios from 'axios'
 import { useState, useEffect } from 'react'
+import { HighlightWithinTextarea } from 'react-highlight-within-textarea'
 
 function App() {
   const [corpus, setCorpus] = useState([]);
   const [searchList, setSearchList] = useState([]);
   const [isSearch, setIsSearch] = useState(false);
+  const [value, setValue] = useState("Type...");
+  const [wrongWord, setWrongWord] = useState([])
+
+  const [suggestBox, setSuggestBox] = useState(false)
+
+  const onChange = (value) => {
+    setValue(value);
+    var lastWord = value.slice(value.length - 1)
+    if (lastWord === " "){
+      console.log("I posted")
+      postSpellCheck(value)
+    }
+  }
 
   const getCorpusList = () => {
     Axios.get("http://localhost:8000/api/corpustokens").then((response) => {
       console.log(response)
       console.log(response.data)
-      setCorpus(response.data.result)
+      setCorpus(response.data.result.sort())
       console.log(corpus)
     })
   }
 
-  const postSpellCheck = () => {
-    
-    Axios.post("http://localhost:8000/api/corpustokens")
+  const postSpellCheck = (content) => {
+    //event.preventDefault()
+    const params = JSON.stringify({ 'input_text': content })
+    Axios.post("http://localhost:8000/api/spellcheck", params, { headers: { "Content-Type": "application/json" } }).then((response) => {
+      console.log(response)
+      console.log(response.data)
+      let spellObject = response.data
+      var wrongArray = []
+      for (var key in spellObject) {
+        if (spellObject.hasOwnProperty(key)) {
+          wrongArray.push(parseInt(key))
+        }
+      }
+
+      console.log(wrongArray)
+      let wordArray = value.split(" ")
+      let wrongWordArray = []
+      wrongArray.map((wrong) => {
+        wrongWordArray.push(wordArray[wrong])
+      })
+      console.log(wrongWordArray)
+      setWrongWord(wrongWordArray)
+    })
   }
 
   const searchInCorpus = (event) => {
@@ -36,6 +70,13 @@ function App() {
 
   useEffect(() => {
     getCorpusList()
+    document.addEventListener("contextmenu", (event) => {
+      event.preventDefault();
+    });
+
+    let allWrongWord = document.querySelectorAll(".wrong-word")
+    console.log(allWrongWord.length)
+
   }, [])
 
   return (
@@ -50,12 +91,25 @@ function App() {
         <div className="content-wrapper">
           <div>
             <div className="box-container">
-              <textarea
-                id="textarea"
-                className="textarea"
-                placeholder="Type Something..."
-                maxLength="500"
-              ></textarea>
+              <HighlightWithinTextarea id="textarea" className="textareaas" maxLength="500"
+                value = {value}
+                onChange= {onChange}
+                highlight = {[
+                  wrongWord.map((each, index) => {
+                    return {
+                      highlight: each,
+                      className: `green wrong-word wrong-${index}`,
+                      id: `wrong-${index}`
+                    }
+                  })
+                ]}
+              />
+              {/*<textarea
+                  id="textarea"
+                  className="textarea"
+                  placeholder="Type Something..."
+                  maxLength="500"
+                ></textarea>*/}
               <div className="corpus-list">
                 <ul className="scroll" id="corpus-ul">
                   {!isSearch ?
@@ -76,13 +130,13 @@ function App() {
               </div>
             </div>
 
-            <button className='check-button'>Spell Check</button>
+            <button className='check-button' onClick={postSpellCheck}>Spell Check</button>
 
             <div className="counter-container">
-              <p>Total character: <span id="total-conter"> 0</span></p>
+              <p>Total character: <span id="total-conter">{value.length}</span></p>
               <p>
                 Remaining:
-                <span className="remaining-counter" id="remaining-counter">500</span>
+                <span className="remaining-counter" id="remaining-counter">{500 - value.length}</span>
               </p>
             </div>
           </div>
