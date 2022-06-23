@@ -1,4 +1,3 @@
-from viterbiAlgorithm import *
 from models import *
 
 def spellCheck(sentence):
