@@ -5,7 +5,6 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from spell_check_model.models import *
-from spell_check_model.spellCheck import *
 import re
 
 #corpus = brown.words()
