@@ -23,5 +23,9 @@ def get_corpus_tokens(request):
 
 @api_view(['POST'])
 def spelling_check(request):
-    input_text = request.data
-    return Response(data=spellCheck(request.data["input_text"]), status=status.HTTP_200_OK)
+    input_text = request.data["input_text"]
+    # print(input_text)
+    if is_contains_mispelled(input_text):
+        return Response(data=non_word_spelling_check(input_text), status=status.HTTP_200_OK)
+    else:
+        return Response(data=real_word_spelling_check(input_text), status=status.HTTP_200_OK)
