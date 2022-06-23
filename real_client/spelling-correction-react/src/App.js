@@ -52,6 +52,19 @@ function App() {
       })
       console.log(wrongWordArray)
       setWrongWord(wrongWordArray)
+
+      let allWrongWord = document.querySelectorAll(".wrong-word")
+      allWrongWord.map((eachWrong, index) => {
+        eachWrong.addEventListener("contextmenu", (event) => {
+          event.preventDefault()
+          document.getElementById('rmenu').className = "show"
+          document.getElementById('rmenu').style.top = mouseY(event) + 'px';
+          document.getElementById('rmenu').style.left = mouseX(event) + 'px';
+          window.event.returnValue = false;
+        })
+      })
+      console.log(allWrongWord.length)
+
     })
   }
 
@@ -67,15 +80,44 @@ function App() {
     setSearchList(newArray.slice(0, 999).sort())
     setIsSearch(true)
   }
+  
+  function mouseX(evt) {
+    if (evt.pageX) {
+      return evt.pageX;
+    } else if (evt.clientX) {
+      return evt.clientX + (document.documentElement.scrollLeft ?
+        document.documentElement.scrollLeft :
+        document.body.scrollLeft);
+    } else {
+      return null;
+    }
+  }
+  
+  function mouseY(evt) {
+    if (evt.pageY) {
+      return evt.pageY;
+    } else if (evt.clientY) {
+      return evt.clientY + (document.documentElement.scrollTop ?
+        document.documentElement.scrollTop :
+        document.body.scrollTop);
+    } else {
+      return null;
+    }
+  }
 
   useEffect(() => {
     getCorpusList()
     document.addEventListener("contextmenu", (event) => {
       event.preventDefault();
+      document.getElementById('rmenu').className = "show"
+      document.getElementById('rmenu').style.top = mouseY(event) + 'px';
+      document.getElementById('rmenu').style.left = mouseX(event) + 'px';
+      window.event.returnValue = false;
     });
 
-    let allWrongWord = document.querySelectorAll(".wrong-word")
-    console.log(allWrongWord.length)
+    document.addEventListener("click", (event) => {
+      document.getElementById('rmenu').className = "hide"
+    })
 
   }, [])
 
@@ -133,12 +175,23 @@ function App() {
             <button className='check-button' onClick={postSpellCheck}>Spell Check</button>
 
             <div className="counter-container">
-              <p>Total character: <span id="total-conter">{value.length}</span></p>
+              <p id='tester'>Total character: <span id="total-conter">{value.length}</span></p>
               <p>
                 Remaining:
                 <span className="remaining-counter" id="remaining-counter">{500 - value.length}</span>
               </p>
             </div>
+
+            <div className='hide' id='rmenu'>
+              <ul className='show'>
+                <li>test</li>
+                <li>test1</li>
+                <li>test2</li>
+                <li>test3</li>
+                <li>test5</li>
+              </ul>
+            </div>
+
           </div>
         </div>
       </div>
