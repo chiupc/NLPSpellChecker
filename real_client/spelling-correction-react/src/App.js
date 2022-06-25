@@ -14,11 +14,15 @@ function App() {
 
   const onChange = (value) => {
     setValue(value);
-    var lastWord = value.slice(value.length - 1)
-    if (lastWord === " "){
+    //var lastWord = value.slice(value.length - 1)
+    if (false){
       console.log("I posted")
       postSpellCheck(value)
     }
+  }
+
+  const checkSpell = () => {
+    postSpellCheck(value)
   }
 
   const getCorpusList = () => {
@@ -53,10 +57,13 @@ function App() {
       console.log(wrongWordArray)
       setWrongWord(wrongWordArray)
 
-      let allWrongWord = document.querySelectorAll(".wrong-word")
-      allWrongWord.map((eachWrong, index) => {
-        eachWrong.addEventListener("contextmenu", (event) => {
-          event.preventDefault()
+      var allWrongWord = document.querySelectorAll(".wrong-word")
+      console.log(allWrongWord)
+      allWrongWord.forEach(function(eachWrong) {
+        console.log(eachWrong)
+        eachWrong.addEventListener("click", (event) => {
+          console.log("testing success")
+          //event.preventDefault()
           document.getElementById('rmenu').className = "show"
           document.getElementById('rmenu').style.top = mouseY(event) + 'px';
           document.getElementById('rmenu').style.left = mouseX(event) + 'px';
@@ -108,15 +115,40 @@ function App() {
   useEffect(() => {
     getCorpusList()
     document.addEventListener("contextmenu", (event) => {
+      /*
       event.preventDefault();
       document.getElementById('rmenu').className = "show"
       document.getElementById('rmenu').style.top = mouseY(event) + 'px';
       document.getElementById('rmenu').style.left = mouseX(event) + 'px';
-      window.event.returnValue = false;
+      window.event.returnValue = false;*/
     });
+    console.log('testing')
 
     document.addEventListener("click", (event) => {
       document.getElementById('rmenu').className = "hide"
+    })
+
+    var allTest = document.querySelectorAll(".word")
+    allTest.forEach( test => {
+      test.addEventListener("contextmenu", (event) => {
+        event.preventDefault()
+        document.getElementById('rmenu').className = "show"
+        document.getElementById('rmenu').style.top = mouseY(event) + 'px';
+        document.getElementById('rmenu').style.left = mouseX(event) + 'px';
+      })
+    })
+
+    var allWrongWord = document.querySelectorAll(".wrong-word")
+      console.log(allWrongWord)
+    allWrongWord.forEach(eachWrong => {
+      eachWrong.addEventListener("click", (event) => {
+        console.log("testing success")
+        //event.preventDefault()
+        document.getElementById('rmenu').className = "show"
+        document.getElementById('rmenu').style.top = mouseY(event) + 'px';
+        document.getElementById('rmenu').style.left = mouseX(event) + 'px';
+        window.event.returnValue = false;
+      })
     })
 
   }, [])
@@ -172,11 +204,11 @@ function App() {
               </div>
             </div>
 
-            <button className='check-button' onClick={postSpellCheck}>Spell Check</button>
+            <button className='check-button' onClick={checkSpell}>Spell Check</button>
 
             <div className="counter-container">
-              <p id='tester'>Total character: <span id="total-conter">{value.length}</span></p>
-              <p>
+              <p className='word text' id='tester'>Total character: <span id="total-conter">{value.length}</span></p>
+              <p className='word text'>
                 Remaining:
                 <span className="remaining-counter" id="remaining-counter">{500 - value.length}</span>
               </p>
