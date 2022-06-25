@@ -232,35 +232,38 @@ def non_word_spelling_check(input_text, max_dist=5, min_word=10):
                 i = i + 1
                 edit_set = [x for x in temp_edit if x[0] <= i]
             freqs_1 = {}
-            for word in edit_set:
-                if word[1] in freq_dist:
-                    freqs_1[word[1]] = freq_dist[word[1]] / total_len
-            entry_bigrams = [x for x in bigrams_ if (entry in x)]
-            candidate_bigrams = {}
-            # create bigrams candidate set
-            for correction in edit_set:
-                for pos_, x in enumerate(entry_bigrams):
-                    if ',' in x or '.' in x or '!' in x or '"' in x:
-                        break
-                    for j in range(len(x)):
-                        if x[j] == entry:
-                            y = list(x)
-                            y[j] = correction[1]
-                            x = tuple(y)
-                    if correction[1] not in candidate_bigrams:
-                        candidate_bigrams[correction[1]] = list()
-                    candidate_bigrams[correction[1]].append(x)
-            freqs_2 = {}
-            for candidate, cbigrams in candidate_bigrams.items():
-                for cbigram in cbigrams:
-                    if cbigram in freq_dist_bigrams:
-                        if candidate not in freqs_2:
-                            freqs_2[candidate] = 0
-                        freqs_2[candidate] = freqs_2[candidate] + freq_dist_bigrams[cbigram] / freq_dist[cbigram[0]]
-            if len(freqs_2) > 0:  # if exists bigrams then return the candidate with highest probability
-                suggestions[position] = [a[0] for a in sorted(freqs_2.items(), key=itemgetter(1), reverse=True)]
-            elif len(freqs_1) > 0:
-                suggestions[position] = [a[0] for a in sorted(freqs_1.items(), key=itemgetter(1), reverse=True)]
+            if(len(edit_set)==0):
+                suggestions[position] = {}
+            else:
+                for word in edit_set:
+                    if word[1] in freq_dist:
+                        freqs_1[word[1]] = freq_dist[word[1]] / total_len
+                entry_bigrams = [x for x in bigrams_ if (entry in x)]
+                candidate_bigrams = {}
+                # create bigrams candidate set
+                for correction in edit_set:
+                    for pos_, x in enumerate(entry_bigrams):
+                        if ',' in x or '.' in x or '!' in x or '"' in x:
+                            break
+                        for j in range(len(x)):
+                            if x[j] == entry:
+                                y = list(x)
+                                y[j] = correction[1]
+                                x = tuple(y)
+                        if correction[1] not in candidate_bigrams:
+                            candidate_bigrams[correction[1]] = list()
+                        candidate_bigrams[correction[1]].append(x)
+                freqs_2 = {}
+                for candidate, cbigrams in candidate_bigrams.items():
+                    for cbigram in cbigrams:
+                        if cbigram in freq_dist_bigrams:
+                            if candidate not in freqs_2:
+                                freqs_2[candidate] = 0
+                            freqs_2[candidate] = freqs_2[candidate] + freq_dist_bigrams[cbigram] / freq_dist[cbigram[0]]
+                if len(freqs_2) > 0:  # if exists bigrams then return the candidate with highest probability
+                    suggestions[position] = [a[0] for a in sorted(freqs_2.items(), key=itemgetter(1), reverse=True)]
+                elif len(freqs_1) > 0:
+                    suggestions[position] = [a[0] for a in sorted(freqs_1.items(), key=itemgetter(1), reverse=True)]
     return suggestions
 
 
