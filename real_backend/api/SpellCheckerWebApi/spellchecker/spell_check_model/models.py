@@ -9,6 +9,11 @@ from nltk.util import trigrams
 from nltk.util import bigrams
 from nltk.tokenize import word_tokenize
 from nltk.collocations import *
+from IPython.display import display
+from collections import Counter
+import os
+
+import pandas as pd
 import nltk
 import re
 import codecs
@@ -45,15 +50,39 @@ freq_dist_tg_pos = nltk.FreqDist(brown_tg_pos)
 correct_spellings = words.words()
 total_len = len(brown_lc_words)
 
-ind = {}
-letters = 'abcdefghijklmnopqrstuvwxyz'
-for word in words.words():
-    if word[0].lower() not in ind:
-        ind[word[0].lower()] = set()
-    ind[word[0].lower()].add(word)
-for letter in letters:
-    if letter not in ind:
-        ind[letter] = set()
+tagged_sentence = list(nltk.corpus.brown.tagged_sents())
+tagged_words = [word for sentence in tagged_sentence for word in sentence]
+tagSets = {word[1] for sentence in tagged_sentence for word in sentence}
+
+print(os.listdir())
+transMatrix = pd.read_pickle('transMatrix.pkl')
+taggedArray = {}
+biTaggedArray = {}
+biTagArray = {}
+biTags = []
+biTaggedWords = []
+
+for i in range(0,len(tagged_words)-1,1):
+    biTags.append([tagged_words[i][1],tagged_words[i+1][1]])
+    biTaggedWords.append([tagged_words[i][0],tagged_words[i+1][0]])
+
+for tag in tagSets:
+    taggedArray[tag] = set()
+    biTagArray[tag] = []
+
+for w in tagged_words:
+    taggedArray[w[1]].add(w[0])
+    biTaggedArray[w[0][0]] = []
+
+for biTag in biTags:
+    array = biTagArray[biTag[0]]
+    array.append(biTag)
+    biTagArray[biTag[0]] = array
+
+for biTagWord in biTaggedWords:
+    array = biTaggedArray[biTagWord[0][0]]
+    array.append(biTagWord)
+    biTaggedArray[biTagWord[0][0]] = array
 
 
 def open_file_or_url(path):
@@ -360,3 +389,110 @@ def real_word_spelling_check(input_text):
         else:
             suggestions_final[k] = [kv[0] for kv in suggestions_final[k]]  # extract just the candidates
     return suggestions_final
+
+def emissionCount(word,tag):
+    #Scan through the Tag Array to find the occurrence of word
+    countWord = [w for w in taggedArray[tag] if w == word] 
+    return(len(countWord))
+
+def viterbiProb(words):
+    prevStateProb = {} #Set to store previous Probability States
+    errorWord = 0
+    for i in range(0,len(words),1):
+        currentStateProb = {} #Set to store current Probability States
+        for tag1 in tagSets:
+            prob = 0
+            if i == 0:
+                transitionProb = transMatrix.loc['.',tag1] #The 1st word of sentence will be based on '.' transtition
+                emissionProb = emissionCount(words[i],tag1)/len(biTagArray[tag1])
+                #Multiplying constant to ensure probability is not too small to cause precision error
+                prob = transitionProb * emissionProb * 100000 
+            else:
+                probMatrix = []
+                prob = 0
+                emissionProb = emissionCount(words[i],tag1)/len(biTagArray[tag1])
+                if emissionProb != 0:
+                    for tag2 in tagSets: #Loop through all available tags to find transition probability
+                        transitionProb = transMatrix.loc[tag2,tag1]
+                        #the probability for current state is also depends on the sequence probability of previous tag
+                        probMatrix.append(transitionProb * emissionProb * prevStateProb[tag2] * 100000 )
+                    #We will pick the maximum probability of Many Tag2 -> Single Tag1, as future sequence bear lower probability
+                    prob = max(probMatrix)
+            #Store the probability for next sequence computation
+            currentStateProb[tag1] = prob
+        #If somehow the probability drop to 0, return the errorWord
+        if(max(currentStateProb.values())==0):
+            errorWord = i
+            return(0,errorWord)
+        prevStateProb = currentStateProb
+    #Pick the maximum probability of all tags combination, a Non-Zero indicate grammatically correct sentence
+    return(max(prevStateProb.values()),errorWord)
+
+def spellCheck(sentence):
+    if is_contains_mispelled(sentence):
+        response = non_word_spelling_check(sentence)
+        if(len(response) == 1):
+            for correctionIndex in response:
+                updatedCandidates = []
+                for candidates in response[correctionIndex]:
+                    correctionSentence = word_tokenize(sentence)
+                    correctionSentence[correctionIndex] = candidates
+                    if(viterbiProb(correctionSentence) != 0):
+                        updatedCandidates.append(candidates)
+                response[correctionIndex] = updatedCandidates
+            print('Return using Viterbi Non Word')
+            return response
+        else:
+            print('Return using Non-Word Look Up')
+            return response
+    else:
+        response = real_word_spelling_check(sentence)
+        if(len(response) == 0):
+            tokenSentence = word_tokenize(sentence)
+            (vitProb,errorIndex) = viterbiProb(tokenSentence)
+            if(vitProb == 0):
+                viterbiCandidate = set()
+                finalCandidate = {}
+                prevWord = tokenSentence[errorIndex-1]
+                errorWord = tokenSentence[errorIndex]
+                nextWord = tokenSentence[errorIndex+1]
+                finalCandidate[errorIndex] = []
+                #Find the words in tagged library to find its POS, then proceed to find POS of subsequent words, and find suitable candidate
+                prevPOS_index = []
+                nextPOS_index = []
+                for w in tagged_words:
+                    if w[0] == prevWord:
+                        prevPOS_index.append(w[1])
+                    if w[0] == nextWord:
+                        nextPOS_index.append(w[1])
+                prevPOS_Counter = Counter(prevPOS_index)
+                nextPOS_Counter = Counter(nextPOS_index)
+                prevPOS = max(prevPOS_Counter,key=prevPOS_Counter.get)
+                nextPOS = max(nextPOS_Counter,key=nextPOS_Counter.get)
+                mat_Trans = {}
+                for t in tagSets:
+                    transP1 = transMatrix.loc[prevPOS,t]
+                    transP2 = transMatrix.loc[t,nextPOS]
+                    mat_Trans[t] = transP1*transP2
+                    nextTrans = max(mat_Trans,key=mat_Trans.get)
+
+                    for t_words in taggedArray[nextTrans]:
+                        if t_words[0] == errorWord[0]:
+                            viterbiCandidate.add(t_words)
+                
+                temp_cand = [(edit_distance(errorWord,w),w) for w in viterbiCandidate]
+                i = 2
+                min_word =10
+                max_dist = 5
+                cand_set = [x for x in temp_cand if x[0] <= i]
+                while len(cand_set) < min_word & i < max_dist:
+                    i = i + 1
+                    cand_set = [x for x in temp_cand if x[0] <= i]
+                finalCandidate[errorIndex] =cand_set
+                print('Return using Viterbi Prob')
+                return finalCandidate
+            else:
+                return None
+        else:
+            print('Return using Noisy Channel')
+            return response
