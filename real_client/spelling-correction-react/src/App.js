@@ -246,7 +246,7 @@ function App() {
                 </ul>
                 <form className="search-form" id="form" role="search" >
                   <input className='search-input' type="search" id="query" name="q"
-                  placeholder="Search..."
+                  placeholder="Search Corpus..."
                   aria-label="Search through site content" />
                   <button className="search-button" id="search-but" onClick={searchInCorpus}>Search</button>
                 </form>
