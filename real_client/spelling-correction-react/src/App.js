@@ -54,21 +54,25 @@ function App() {
       wrongArray.map((wrong) => {
         wrongWordArray.push(wordArray[wrong])
       })
-      console.log(wrongWordArray)
+      console.log('WrongWordArray:',wrongWordArray)
       setWrongWord(wrongWordArray)
 
-      var allWrongWord = document.querySelectorAll(".wrong-word")
-      console.log(allWrongWord)
-      allWrongWord.forEach(function(eachWrong) {
-        console.log(eachWrong)
-        eachWrong.addEventListener("click", (event) => {
-          console.log("testing success")
-          //event.preventDefault()
-          document.getElementById('rmenu').className = "show"
-          document.getElementById('rmenu').style.top = mouseY(event) + 'px';
-          document.getElementById('rmenu').style.left = mouseX(event) + 'px';
-          window.event.returnValue = false;
-        })
+      setTimeout( () => {
+        var allWrongWord = document.querySelectorAll(".wrong-word")
+        console.log('allWrongWord:',  allWrongWord)
+        allWrongWord.forEach(function(eachWrong) {
+          console.log(eachWrong)
+          var child = eachWrong.childNodes
+          child.forEach(function(eachChild){
+            eachChild.addEventListener('contextmenu', event =>{
+              event.preventDefault()
+              document.getElementById('rmenu').className = "show"
+              document.getElementById('rmenu').style.top = mouseY(event) + 'px';
+              document.getElementById('rmenu').style.left = mouseX(event) + 'px';
+              window.event.returnValue = false;
+            })
+          })
+      },500);
       })
       console.log(allWrongWord.length)
 
@@ -177,7 +181,7 @@ function App() {
                     }
                   })
                 ]}
-              />
+              ></HighlightWithinTextarea>
               {/*<textarea
                   id="textarea"
                   className="textarea"
