@@ -24,6 +24,7 @@ def get_corpus_tokens(request):
 def spelling_check(request):
     input_text = request.data["input_text"]
     # print(input_text)
+    return Response(data=spellCheck(input_text),status=status.HTTP_200_OK)
     if is_contains_mispelled(input_text):
         return Response(data=non_word_spelling_check(input_text), status=status.HTTP_200_OK)
     else:
