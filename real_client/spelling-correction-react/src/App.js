@@ -203,7 +203,7 @@ function App() {
   return (
     <>
       <div className="container">
-        <h2>Real Time Spelling Correction App</h2>
+        <h2>NLP Spelling Correction App</h2>
         <p className="main">
           Check your English text for grammar, spelling, and punctuation errors
           with our spelling correction app.
