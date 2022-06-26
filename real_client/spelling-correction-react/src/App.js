@@ -80,7 +80,7 @@ function App() {
     let value = document.getElementById('query').value
     let newArray = []
     corpus.map((word, key) => {
-      if (word.includes(value)) {
+      if (word.startsWith(value)) {
         newArray.push(word.toLowerCase())
       }
     })
