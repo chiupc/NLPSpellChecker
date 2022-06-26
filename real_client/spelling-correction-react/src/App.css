@@ -190,15 +190,17 @@ ul{
 }
 li{
   line-height:35px;
+  cursor: pointer;
 }
 li:nth-child(even){
-  background:#ccc;
-  border-bottom: 1px solid #ccc;
-  border-top: 1px solid #ccc;
+  background:#d7f7f0;
+  border-bottom: 1px solid #d7f7f0;
+  border-top: 1px solid #d7f7f0;
 }
 
+
 li:hover {
-  background-color: #ccc;
+  background-color: rgb(42, 201, 164);
 }
 
 li:nth-child(1){
