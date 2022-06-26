@@ -213,6 +213,7 @@ function App() {
           <div>
             <div className="box-container">
               <HighlightWithinTextarea id="textarea" className="textareaas" maxLength="500"
+                maxlength = "500"
                 placeholder = ""
                 value = {value}
                 onChange= {onChange}
