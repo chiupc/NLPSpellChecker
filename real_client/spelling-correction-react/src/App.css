@@ -42,6 +42,7 @@ textarea, .DraftEditor-root {
   border: 0.5px solid rgb(231 233 245);
   border-radius: 16px;
   overflow: scroll;
+  overflow-y: auto;
   /*overflow-y: hidden;*/
   overflow-x: hidden; /* Hide horizontal scrollbar */
 }
