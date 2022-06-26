@@ -9,19 +9,17 @@ function App() {
   const [isSearch, setIsSearch] = useState(false);
   const [value, setValue] = useState("Type...");
   const [wrongWord, setWrongWord] = useState([])
-
-  const [suggestBox, setSuggestBox] = useState(false)
+  const [suggestList, setSuggestList] = useState([])
 
   const onChange = (value) => {
     setValue(value);
-    //var lastWord = value.slice(value.length - 1)
-    if (false){
-      console.log("I posted")
-      postSpellCheck(value)
-    }
   }
 
   const checkSpell = () => {
+    setWrongWord([])
+    setSuggestList([])
+    console.log(wrongWord)
+    console.log(suggestList)
     postSpellCheck(value)
   }
 
@@ -42,9 +40,11 @@ function App() {
       console.log(response.data)
       let spellObject = response.data
       var wrongArray = []
+      var suggestionArray = []
       for (var key in spellObject) {
         if (spellObject.hasOwnProperty(key)) {
           wrongArray.push(parseInt(key))
+          suggestionArray.push(spellObject[key])
         }
       }
 
@@ -56,25 +56,37 @@ function App() {
       })
       console.log('WrongWordArray:',wrongWordArray)
       setWrongWord(wrongWordArray)
+      setSuggestList(suggestionArray)
 
       setTimeout( () => {
         var allWrongWord = document.querySelectorAll(".wrong-word")
         console.log('allWrongWord:',  allWrongWord)
-        allWrongWord.forEach(function(eachWrong) {
+        allWrongWord.forEach(function(eachWrong, index) {
           console.log(eachWrong)
           var child = eachWrong.childNodes
           child.forEach(function(eachChild){
+            eachChild.childNodes[0].className = `wrongspan-${index}`
             eachChild.addEventListener('contextmenu', event =>{
               event.preventDefault()
+              console.log(event.target)
+              var fireElemIndex = event.target.className.split('-')[1]
+              console.log(fireElemIndex)
               document.getElementById('rmenu').className = "show"
               document.getElementById('rmenu').style.top = mouseY(event) + 'px';
               document.getElementById('rmenu').style.left = mouseX(event) + 'px';
+              /*
+              var suggestUl = document.getElementById('suggestul')
+              suggestList[fireElemIndex].map((suggestWord) => {
+                var li = document.createElement("li")
+                li.innerHTML = suggestWord
+                suggestUl.appendChild(li)
+              })*/
               window.event.returnValue = false;
             })
           })
-      },500);
-      })
-      console.log(allWrongWord.length)
+      },1000);
+      },)
+      //console.log(allWrongWord.length)
 
     })
   }
@@ -131,31 +143,62 @@ function App() {
     document.addEventListener("click", (event) => {
       document.getElementById('rmenu').className = "hide"
     })
-
-    var allTest = document.querySelectorAll(".word")
-    allTest.forEach( test => {
-      test.addEventListener("contextmenu", (event) => {
-        event.preventDefault()
-        document.getElementById('rmenu').className = "show"
-        document.getElementById('rmenu').style.top = mouseY(event) + 'px';
-        document.getElementById('rmenu').style.left = mouseX(event) + 'px';
-      })
-    })
-
-    var allWrongWord = document.querySelectorAll(".wrong-word")
-      console.log(allWrongWord)
-    allWrongWord.forEach(eachWrong => {
-      eachWrong.addEventListener("click", (event) => {
-        console.log("testing success")
-        //event.preventDefault()
-        document.getElementById('rmenu').className = "show"
-        document.getElementById('rmenu').style.top = mouseY(event) + 'px';
-        document.getElementById('rmenu').style.left = mouseX(event) + 'px';
-        window.event.returnValue = false;
-      })
-    })
-
   }, [])
+
+  useEffect(() => {
+    var allWrongWord = document.querySelectorAll(".wrong-word")
+      console.log('allWrongWord:',  allWrongWord)
+      allWrongWord.forEach(function(eachWrong, index) {
+        console.log(eachWrong)
+        var child = eachWrong.childNodes
+        child.forEach(function(eachChild){
+          eachChild.childNodes[0].className = `wrongspan-${index}`
+          
+          eachChild.addEventListener('contextmenu', event =>{
+            event.preventDefault()
+            
+            console.log(event.target)
+            var fireElemIndex = event.target.className.split('-')[1]
+            console.log(fireElemIndex)
+            document.getElementById('rmenu').className = "show"
+            document.getElementById('rmenu').style.top = mouseY(event) + 'px';
+            document.getElementById('rmenu').style.left = mouseX(event) + 'px';
+            var suggestUl = document.getElementById('suggestul')
+            removeAllChild(suggestUl)
+            
+            suggestList[fireElemIndex].map((suggestWord) => {
+              var p = document.createElement("p")
+              console.log(eachChild.childNodes[0].innerHTML)
+              p.className = `s-${eachChild.childNodes[0].innerHTML}`
+              p.innerHTML = suggestWord
+              p.addEventListener("click", function(event){
+                replaceWord(event.target.className.split('-')[1], event.target.innerHTML)
+                console.log(event.target.innerHTML)
+                console.log(event.target.className)
+              })
+              suggestUl.appendChild(p)
+            })
+            window.event.returnValue = false;
+          })
+        })
+      },);
+  }, [suggestList, value])
+
+  const removeAllChild = (parent) => {
+    while (parent.firstChild) {
+      parent.removeChild(parent.firstChild)
+    }
+  }
+
+  const replaceWord = (wrongWord, correctWord) => {
+    console.log(wrongWord)
+    console.log(correctWord)
+    var wrongRegex = new RegExp(wrongWord, "g")
+    var newValue = value.replace(wrongRegex, correctWord)
+    console.log(newValue)
+    setValue(newValue)
+  }
+
 
   return (
     <>
@@ -219,13 +262,8 @@ function App() {
             </div>
 
             <div className='hide' id='rmenu'>
-              <ul className='show'>
-                <li>test</li>
-                <li>test1</li>
-                <li>test2</li>
-                <li>test3</li>
-                <li>test5</li>
-              </ul>
+              <div className='show ul-list' id='suggestul'>
+              </div>
             </div>
 
           </div>
